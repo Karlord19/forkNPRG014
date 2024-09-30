@@ -5,13 +5,13 @@ def jess = [name : 'Jess', age : 33]
 def process(person, code) {
 //    code.delegate = person    
 //    code.resolveStrategy = Closure.DELEGATE_FIRST
-    code.call()
-//    person.with(code)
+    // code.call()
+   person.with(code)
 }
 
 name = "Noname"
 process(joe, {println name})
-//process(jeff, {println age})
+process(jeff, {println age})
 
 
 //TASK Experiment with owner, delegate as well as with different resolution strategies

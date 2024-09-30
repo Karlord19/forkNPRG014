@@ -23,6 +23,14 @@ class Plane {
         println "Changing altitude to $altitude"
         this.altitude = altitude
     }
+
+    void performCommand(description, code) {
+        this.with(code)
+    }
+
+    void call(String desc, Closure code) {
+        performCommand(desc, code)
+    }
 }
 
 final takeoff = {
