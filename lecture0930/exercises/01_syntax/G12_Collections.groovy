@@ -18,5 +18,6 @@ assert 26 == ('a'..'z').inject(0){acc, s -> acc + 1}
 
 //TASK Find the maximum of the following collection using the inject() function
 assert 26 == [1, 2, 3, 4, 3, 4, 19, 26, 25, 19, 22, 25, 3, 10, 12, 23, 24, 12, 11, 18].inject(0){acc, num -> Math.max(acc, num)}
+// inject nastavi prvni hodnotu - v tomto pripade na 0
 
 println 'ok'

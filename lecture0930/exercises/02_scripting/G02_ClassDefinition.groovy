@@ -22,3 +22,4 @@ object['age'] = 20
 println 'Call the object: ' + object.name + " age " + object['age']
 
 //TASK modify so that a class definition is returned from the "code" and the new instance is created in the main script
+// idk

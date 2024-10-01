@@ -54,6 +54,6 @@ println '*** We are in flight now ***'
 plane.performCommand('Land', land)
 
 //TASK Make the following code pass, too. Use the call() method to handle function calls on the Plane objects.
-//plane('Take off', takeoff)
-//println '*** We are in flight now ***'
-//plane('Land', land)
+plane('Take off', takeoff)
+println '*** We are in flight now ***'
+plane('Land', land)
