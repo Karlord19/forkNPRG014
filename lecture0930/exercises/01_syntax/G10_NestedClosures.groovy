@@ -1,3 +1,4 @@
+def global = {
 final a = {
     final b = {
         final c = {magicNumber + 10}
@@ -11,5 +12,10 @@ final data = [magicNumber: 20]
 a.delegate = data
 // C nema magicNumber, zepta se hornijsi vrstvy, B taky nema,
 // zepta se hornejsi, A uz ma - bylo mu pridano skrz nastaveni delegata
+
 println a()
 assert 30 == a()
+}
+final data = [magicNumber: 20]
+global.delegate = data
+global()
