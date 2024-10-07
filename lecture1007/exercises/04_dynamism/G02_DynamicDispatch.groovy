@@ -19,6 +19,9 @@ class Receptionist {
     String welcome(final visitor) {
         'We\'re full, please go away!'
     }
+    String call(visitor) {
+        return welcome(visitor)
+    }
 }
 
 final receptionist = new Receptionist()
@@ -30,7 +33,7 @@ final greetings = visitors.collect {
 greetings.each {println it}
 
 //TASK Make the following code pass
-//println receptionist(new BusinessPerson())
-//println receptionist(new Turist())
-//println receptionist(new Burglar())
-//println receptionist(new Homeless())
+println receptionist(new BusinessPerson())
+println receptionist(new Turist())
+println receptionist(new Burglar())
+println receptionist(new Visitor())

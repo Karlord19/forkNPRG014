@@ -12,6 +12,11 @@ class Group {
         members.addAll(g)
         return this
     }
+
+    def minus(Person p) {
+        members.remove(p)
+        return this
+    }
 }
 
 @ToString
@@ -42,6 +47,6 @@ assert [susan, dave, joe, alice] as Set == closeFriends.members
 assert [alice, dave, susan, joe] as Set == ((alice + joe) << dave << susan).members
 
 //TASK Implement a minus operator that removes a person from a group
-//assert [alice, dave, susan] as Set == (((alice + joe) << dave << susan) - joe).members
+assert [alice, dave, susan] as Set == (((alice + joe) << dave << susan) - joe).members
 
 println 'done'

@@ -16,3 +16,7 @@ def methodMissing(String name, args) {
 }
 
 def propertyMissing(String name) { name }
+
+
+// hello ladies, gentlemen MEANS hello(ladies, gentlemen)
+// hi guys MEANS hi(guys)

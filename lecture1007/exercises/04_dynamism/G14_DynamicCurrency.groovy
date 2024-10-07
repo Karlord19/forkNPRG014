@@ -13,6 +13,15 @@ class DynamicMoney {
 }
 
 //TASK Enhance the Integer class with currencies so that the following code passes
+Integer.metaClass.getEur = { ->
+    new DynamicMoney(amount: delegate, currency: 'eur')
+}
+Integer.metaClass.getUsd = { ->
+    new DynamicMoney(amount: delegate, currency: 'usd')
+}
+
+// u cant have Usd and usd at the same time
+// it will just take the getUsd thing and accept Usd and usd
 
 println 10.eur
 println 10.eur + 20.eur
