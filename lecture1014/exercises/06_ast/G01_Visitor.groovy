@@ -1,6 +1,7 @@
 abstract class Expression {
     public void acceptVisitor(Visitor v) {
         //TASK implement this method to make the visitor pattern work
+        v.visit(this)
     }
 }
 

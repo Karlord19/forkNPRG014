@@ -10,3 +10,4 @@ class Party {
 return new Party()
 
 //TASK Explore in the Ast Inspector
+// in groovy console only

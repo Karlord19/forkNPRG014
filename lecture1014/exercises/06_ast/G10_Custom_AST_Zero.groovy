@@ -30,7 +30,25 @@ public @interface Zero {}
 public class ZeroTransformation implements ASTTransformation {
 
     public void visit(ASTNode[] astNodes, SourceUnit source) {
+        ClassNode annotatedClass = astNodes[1]
 
+        ASTNode stmt = new org.codehaus.groovy.ast.stmt.ExpressionStatement(
+            new org.codehaus.groovy.ast.expr.FieldExpression(
+                annotatedClass,
+                'zero'
+            )
+        )
+        annotatedClass.addMethod(
+            'getZero',
+            Opcodes.ACC_PUBLIC,
+            ClassHelper.Integer_TYPE,
+            new Parameter[0],
+            new ClassNode[0],
+            new org.codehaus.groovy.ast.stmt.BlockStatement(
+                [stmt] as org.codehaus.groovy.ast.stmt.Statement[],
+                new org.codehaus.groovy.ast.expr.ConstantExpression(0)
+            )
+        )
     }
 }
 

@@ -66,7 +66,7 @@ class Calculator {
     @Unsupported
     def divide(a, b) {}
 
-    //@Unsupported
+    //@Unsupported (unsupported operations must be empty)
     def multiply(a, b) {
         a * b
     }
