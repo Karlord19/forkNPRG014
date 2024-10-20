@@ -30,6 +30,21 @@ public @interface Zero2 {}
 public class ZeroTransformation2 implements ASTTransformation {
 
     public void visit(ASTNode[] astNodes, SourceUnit source) {
+        ClassNode annotatedClass = astNodes[1]
+
+        AstBuilder ab = new AstBuilder()
+        List<ASTNode> res = ab.buildFromCode(CompilePhase.SEMANTIC_ANALYSIS, true) {
+            return 0
+        }
+
+        annotatedClass.addMethod(
+            'getZero',
+            Opcodes.ACC_PUBLIC,
+            ClassHelper.Integer_TYPE,
+            Parameter.EMPTY_ARRAY,
+            ClassNode.EMPTY_ARRAY,
+            res[0]
+        )
     }
 }
 

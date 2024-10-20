@@ -15,6 +15,11 @@ import org.codehaus.groovy.transform.GroovyASTTransformationClass
 import groovyjarjarasm.asm.Opcodes
 import static org.codehaus.groovy.control.CompilePhase.SEMANTIC_ANALYSIS
 
+import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.stmt.BlockStatement
+import org.codehaus.groovy.ast.stmt.ReturnStatement
+import org.codehaus.groovy.ast.VariableScope
+
 @Retention(RetentionPolicy.SOURCE)
 @Target([ElementType.TYPE])
 @GroovyASTTransformationClass("ZeroTransformation4")
@@ -26,12 +31,26 @@ public @interface Zero4 {}
 public class ZeroTransformation4 implements ASTTransformation {
 
     public void visit(ASTNode[] astNodes, SourceUnit source) {
+        ClassNode annotatedClass = astNodes[1]
 
+        ASTNode stmt = new ReturnStatement(new ConstantExpression(0))
+
+        annotatedClass.addMethod(
+            'getZero',
+            Opcodes.ACC_PUBLIC,
+            ClassHelper.Integer_TYPE,
+            Parameter.EMPTY_ARRAY,
+            ClassNode.EMPTY_ARRAY,
+            new org.codehaus.groovy.ast.stmt.BlockStatement(
+                [stmt] as org.codehaus.groovy.ast.stmt.Statement[],
+                new VariableScope()
+            )
+        )
     }
 }
 
 final calculator = new GroovyShell(Zero4.class.getClassLoader()).evaluate('''
-@Zero2
+@Zero4
 class Calculator {}
 
 new Calculator()

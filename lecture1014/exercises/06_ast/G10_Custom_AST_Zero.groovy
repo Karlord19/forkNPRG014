@@ -15,6 +15,14 @@ import org.codehaus.groovy.transform.GroovyASTTransformationClass
 import groovyjarjarasm.asm.Opcodes
 import static org.codehaus.groovy.control.CompilePhase.SEMANTIC_ANALYSIS
 
+import org.codehaus.groovy.ast.*
+import org.codehaus.groovy.ast.expr.*
+import org.codehaus.groovy.ast.stmt.*
+import org.codehaus.groovy.control.*
+import org.codehaus.groovy.transform.*
+import org.codehaus.groovy.syntax.Token
+import org.codehaus.groovy.ast.tools.GeneralUtils.*
+
 @Retention(RetentionPolicy.SOURCE)
 @Target([ElementType.TYPE])
 @GroovyASTTransformationClass("ZeroTransformation")
@@ -32,21 +40,17 @@ public class ZeroTransformation implements ASTTransformation {
     public void visit(ASTNode[] astNodes, SourceUnit source) {
         ClassNode annotatedClass = astNodes[1]
 
-        ASTNode stmt = new org.codehaus.groovy.ast.stmt.ExpressionStatement(
-            new org.codehaus.groovy.ast.expr.FieldExpression(
-                annotatedClass,
-                'zero'
-            )
-        )
+        ASTNode stmt = new ReturnStatement(new ConstantExpression(0))
+
         annotatedClass.addMethod(
             'getZero',
             Opcodes.ACC_PUBLIC,
             ClassHelper.Integer_TYPE,
-            new Parameter[0],
-            new ClassNode[0],
+            Parameter.EMPTY_ARRAY,
+            ClassNode.EMPTY_ARRAY,
             new org.codehaus.groovy.ast.stmt.BlockStatement(
                 [stmt] as org.codehaus.groovy.ast.stmt.Statement[],
-                new org.codehaus.groovy.ast.expr.ConstantExpression(0)
+                new VariableScope()
             )
         )
     }
