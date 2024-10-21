@@ -22,16 +22,9 @@ import org.codehaus.groovy.control.messages.SyntaxErrorMessage
 import groovyjarjarasm.asm.Opcodes
 import org.codehaus.groovy.ast.ClassHelper
 import static org.codehaus.groovy.ast.tools.GeneralUtils.*
-import org.codehaus.groovy.ast.stmt.Statement
-import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.AnnotationNode
 import org.codehaus.groovy.ast.expr.ConstantExpression
-import org.codehaus.groovy.ast.stmt.ExpressionStatement
-import org.codehaus.groovy.ast.expr.VariableExpression
-import org.codehaus.groovy.ast.builder.AstBuilder
-import org.codehaus.groovy.syntax.Token
-
 
 @Retention(RetentionPolicy.SOURCE)
 @Target([ElementType.TYPE])
@@ -71,15 +64,18 @@ public class CreatedAtTransformation implements ASTTransformation {
         
         //TODO Implement this method
 
-        ClassNode classNode = (ClassNode) astNodes[1];
-        AnnotationNode annotationNode = (AnnotationNode) astNodes[0];
+        ClassNode classNode = (ClassNode) astNodes[1]
+        AnnotationNode annotationNode = (AnnotationNode) astNodes[0]
+        AstBuilder ab = new AstBuilder()
         
         // add the private long field
-        classNode.addField("timestamp", Opcodes.ACC_PRIVATE, ClassHelper.long_TYPE, new ConstantExpression(0L));
+        classNode.addField("timestamp", Opcodes.ACC_PRIVATE, ClassHelper.long_TYPE, new ConstantExpression(0L))
 
         // add the getter method
         String getterName = annotationNode.getMember("name")?.getText() ?: "getTimestamp"
-        ASTNode getterStmt = new ReturnStatement(new VariableExpression("timestamp"))
+        List<ASTNode> res = ab.buildFromCode(SEMANTIC_ANALYSIS, true) {
+            return timestamp
+        }
         MethodNode getterMethod = new MethodNode(
             getterName,
             Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
@@ -87,20 +83,16 @@ public class CreatedAtTransformation implements ASTTransformation {
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
             new BlockStatement(
-                [getterStmt] as org.codehaus.groovy.ast.stmt.Statement[],
+                [res[0]] as org.codehaus.groovy.ast.stmt.Statement[],
                 new VariableScope()
             )
         )
         classNode.addMethod(getterMethod)
 
         // add the clearTimestamp method
-        ASTNode clearTimestampStmt = new ExpressionStatement(
-            new BinaryExpression(
-                new VariableExpression("timestamp"),
-                Token.newSymbol("=", 0, 0),
-                new ConstantExpression(0L)
-            )
-        )
+        res = ab.buildFromCode(SEMANTIC_ANALYSIS, true) {
+            timestamp = 0
+        }
         MethodNode clearTimestampMethod = new MethodNode(
             "clearTimestamp",
             Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
@@ -108,11 +100,29 @@ public class CreatedAtTransformation implements ASTTransformation {
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
             new BlockStatement(
-                [clearTimestampStmt] as org.codehaus.groovy.ast.stmt.Statement[],
+                [res[0]] as org.codehaus.groovy.ast.stmt.Statement[],
                 new VariableScope()
             )
         )
         classNode.addMethod(clearTimestampMethod)
+
+        // add the reset on call to all existing methods, after one second has passed
+        res = ab.buildFromCode(SEMANTIC_ANALYSIS, true) {
+            def currentTime = System.currentTimeMillis()
+            def timeDiff = currentTime - timestamp
+            if (timeDiff > 1000) {
+                timestamp = currentTime
+            }
+        }
+        for (MethodNode method : classNode.methods) {
+            if (method.name.equals("clearTimestamp") || method.name.equals(getterName)) {
+                continue
+            }
+            method.setCode(new BlockStatement(
+                [res[0], method.code] as org.codehaus.groovy.ast.stmt.Statement[],
+                new VariableScope()
+            ))
+        }
     }
 }
 
@@ -142,25 +152,25 @@ sleep(1500)
 calculator.add(10)
 assert calculator.sum == 10
 
-// assert oldTimeStamp < calculator.timestamp()
-// //The timestamp should have been updated since the pause was longer than 1s
-// assert calculator.timestamp() == calculator.timestamp()
-// oldTimeStamp = calculator.timestamp()
+assert oldTimeStamp < calculator.timestamp()
+//The timestamp should have been updated since the pause was longer than 1s
+assert calculator.timestamp() == calculator.timestamp()
+oldTimeStamp = calculator.timestamp()
 
-// sleep(1500)
-// calculator.subtract(1)
-// assert calculator.sum == 9
-// //The timestamp should have been updated since the pause was longer than 1s
-// assert oldTimeStamp < calculator.timestamp()
-// assert calculator.timestamp() == calculator.timestamp()
+sleep(1500)
+calculator.subtract(1)
+assert calculator.sum == 9
+//The timestamp should have been updated since the pause was longer than 1s
+assert oldTimeStamp < calculator.timestamp()
+assert calculator.timestamp() == calculator.timestamp()
 
-// oldTimeStamp = calculator.timestamp()
-// sleep(100)
-// calculator.subtract(1)
-// assert calculator.sum == 8
-// //The timestamp should not have been updated since the pause was shorter than 1s
-// assert oldTimeStamp == calculator.timestamp()
-// assert calculator.timestamp() == calculator.timestamp()
+oldTimeStamp = calculator.timestamp()
+sleep(100)
+calculator.subtract(1)
+assert calculator.sum == 8
+//The timestamp should not have been updated since the pause was shorter than 1s
+assert oldTimeStamp == calculator.timestamp()
+assert calculator.timestamp() == calculator.timestamp()
 
 calculator.clearTimestamp()
 assert calculator.timestamp() == 0
