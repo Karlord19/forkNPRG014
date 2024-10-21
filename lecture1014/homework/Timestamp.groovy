@@ -30,6 +30,7 @@ import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.builder.AstBuilder
+import org.codehaus.groovy.syntax.Token
 
 
 @Retention(RetentionPolicy.SOURCE)
@@ -91,6 +92,27 @@ public class CreatedAtTransformation implements ASTTransformation {
             )
         )
         classNode.addMethod(getterMethod)
+
+        // add the clearTimestamp method
+        ASTNode clearTimestampStmt = new ExpressionStatement(
+            new BinaryExpression(
+                new VariableExpression("timestamp"),
+                Token.newSymbol("=", 0, 0),
+                new ConstantExpression(0L)
+            )
+        )
+        MethodNode clearTimestampMethod = new MethodNode(
+            "clearTimestamp",
+            Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+            ClassHelper.VOID_TYPE,
+            Parameter.EMPTY_ARRAY,
+            ClassNode.EMPTY_ARRAY,
+            new BlockStatement(
+                [clearTimestampStmt] as org.codehaus.groovy.ast.stmt.Statement[],
+                new VariableScope()
+            )
+        )
+        classNode.addMethod(clearTimestampMethod)
     }
 }
 
@@ -140,7 +162,7 @@ assert calculator.sum == 10
 // assert oldTimeStamp == calculator.timestamp()
 // assert calculator.timestamp() == calculator.timestamp()
 
-// calculator.clearTimestamp()
-// assert calculator.timestamp() == 0
+calculator.clearTimestamp()
+assert calculator.timestamp() == 0
 
 println 'well done'
