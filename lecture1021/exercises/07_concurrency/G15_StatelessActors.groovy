@@ -26,8 +26,8 @@ counter << 'Hello'
 assert 35 == counter.sendAndWait(new GetRequest())
 
 //TODO Uncomment the following lines to see how mesage handlers can be added dynamically at runtime
-//counter.when {Double value -> println "Received a double $value"}
-//counter 1.0
+counter.when {Double value -> println "Received a double $value"}
+counter 1.0
 
 @Immutable final class GetRequest {}
 

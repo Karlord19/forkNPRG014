@@ -7,6 +7,7 @@ Thread.start {
 }
 
 println "Instant peek: " + event.instantVal
+// instantVal is a snapshot of the current state of the agent
 
 //Notice syntax sugar here allowing you to omit "send"
 Thread.start {
@@ -18,3 +19,4 @@ println "Another instant peek: " + event.instantVal
 sleep 2000
 event { it << 'Eve' }
 println "Final state: " + event.val
+// val is the state of the agent after all the events have been processed

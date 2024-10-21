@@ -6,10 +6,18 @@ import groovyx.gpars.dataflow.DataflowBroadcast
 import groovyx.gpars.group.NonDaemonPGroup
 import groovyx.gpars.group.PGroup
 
+// nejede to, ani ten typek nevi co se s tim deje
+
+def elTest = task { checkElectricity() }
+
 def checkEngine() {
-    println "Checking the engine"
-    sleep 3000
-    return true
+    if (elTest.get() == true) {
+        println "Checking the engine"
+        sleep 3000
+        return true
+    }
+    println "Engine check failed"
+    return false
 }
 
 def checkTyres() {
@@ -25,7 +33,6 @@ def checkElectricity() {
 }
 
 def checkRadar() {
-    def elTest = task { checkElectricity() }
     println "Turning radar on"
     sleep 1000
     if (elTest.get()) {

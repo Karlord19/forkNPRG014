@@ -42,29 +42,40 @@ group.task {
 }
 
 
-//Handle progress
-group.task {
-    def alt = group.select(progressNotifications, exit)
-    while(true) {
-        def msg = alt.select()
-        if (msg.index == 1) break
-        SwingUtilities.invokeLater{slider.value = slider.value + msg.value}
-    }
-}
+// //Handle progress
+// group.task {
+//     def alt = group.select(progressNotifications, exit)
+//     while(true) {
+//         def msg = alt.select()
+//         if (msg.index == 1) break
+//         SwingUtilities.invokeLater{slider.value = slider.value + msg.value}
+//     }
+// }
 
-//Handle Message updates
-group.task {
-    def alt = group.select(labelUpdates, exit)
-    while(true) {
-        def msg = alt.select()
-        if (msg.index == 1) break
-        SwingUtilities.invokeLater{message.text = msg.value}
-    }
-}.join()
+// //Handle Message updates
+// group.task {
+//     def alt = group.select(labelUpdates, exit)
+//     while(true) {
+//         def msg = alt.select()
+//         if (msg.index == 1) break
+//         SwingUtilities.invokeLater{message.text = msg.value}
+//     }
+// }.join()
 
 //TASK Merge the two consumer process into a single one
 
-
+group.task {
+    def alt = group.select(progressNotifications, labelUpdates, exit)
+    while(true) {
+        def msg = alt.select()
+        if (msg.index == 2) break
+        if (msg.index == 0) {
+            SwingUtilities.invokeLater{slider.value = slider.value + msg.value}
+        } else {
+            SwingUtilities.invokeLater{message.text = msg.value}
+        }
+    }
+}
 
 
 def buildUI(JLabel myLabel, JSlider mySlider) {

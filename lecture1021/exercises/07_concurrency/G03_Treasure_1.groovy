@@ -11,7 +11,7 @@ class TreasureBox {
            key1 = true
            println "Unlocking with the president key"
            Thread.sleep(1000)
-           this.notify()           
+           this.notifyAll()           
         }
     }
 
@@ -20,7 +20,7 @@ class TreasureBox {
            key2 = true
            println "Unlocking with the prime minister key"
            Thread.sleep(1000)           
-           this.notify()           
+           this.notifyAll()           
         }
     }
 
@@ -29,7 +29,7 @@ class TreasureBox {
            key3 = true        
            println "Unlocking with the police director key"
            Thread.sleep(1000)           
-           this.notify()
+           this.notifyAll()
         }
     }
     
@@ -48,13 +48,14 @@ Thread.start {
 }
 
 // TASK Uncomment and run. Why is the box opening reported only once? What is the term to describe issues like this?
+// It notified only one thread, the other two are still waiting -> box opened only once
 // Fix the TreasureBox class so that it correctly opens three times, once for each calling thread.
-//Thread.start {
-//    box.open()
-//}
-//Thread.start {
-//    box.open()
-//}
+Thread.start {
+   box.open()
+}
+Thread.start {
+   box.open()
+}
 
 box.enterPoliceDirectorKey("1144")
 box.enterPrezidentKey("1122")

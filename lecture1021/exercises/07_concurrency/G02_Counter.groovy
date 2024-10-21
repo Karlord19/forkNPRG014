@@ -1,14 +1,20 @@
+import java.util.concurrent.Executors
+
 class Counter {
     static long counter = 0
 }
 
+def myPool = Executors.newFixedThreadPool(8)
 final threads = (1..50).collect {
-    Thread.start {
-        Counter.counter++
+    myPool.submit {
+        synchronized(Counter) {
+            Counter.counter++
+        }
     }
 }
-
-threads*.join()
+threads*.get()
+myPool.shutdown()
+myPool.awaitTermination(1, java.util.concurrent.TimeUnit.SECONDS)
 println Counter.counter
 
 //TASK Properly synchronize

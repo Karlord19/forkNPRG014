@@ -5,7 +5,7 @@ import groovyx.gpars.group.*
 final DataflowQueue numbers = new DataflowQueue()
 
 def alteredNumbers = numbers | {it * 2} | {it + 10}
-def filtered = alteredNumbers.filter {it > 20}
+def filtered = alteredNumbers.filter {it > 20} | {it * -1}
 
 //TASK: Negate all the numbers that come out of 'filtered' by adding another chained function
 

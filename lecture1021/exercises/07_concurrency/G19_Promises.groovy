@@ -7,6 +7,15 @@ def y = new DataflowVariable()
 def add = new DataflowVariable()
 def mul = new DataflowVariable()
 
+def tx = task {
+    sleep 3000
+    x << 10
+}
+def ty = task {
+    sleep 2000
+    y << 4
+}
+
 task {
     add << x.get() + y.get()
     println "Add: " + add.get()
@@ -23,14 +32,14 @@ task {
     println "${x.get()} * ${y.get()} = ${mul.get()}"
 }
 
-task {
-    sleep 3000
-    x << 10
-}
-task {
-    sleep 2000
-    y<<4
-}
+// task {
+//     sleep 3000
+//     x << 10
+// }
+// task {
+//     sleep 2000
+//     y<<4
+// }
 
 [add, mul]*.join()
 sleep 1000

@@ -6,7 +6,7 @@ import static groovyx.gpars.GParsPool.withPool
  */
 
 final t1 = System.currentTimeMillis()
-def numberOfThreads = 10
+def numberOfThreads = 2
 withPool(numberOfThreads) {
     println GParsPool.runForkJoin(32) { n ->
         if (n <= 2) return 1
