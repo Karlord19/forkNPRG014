@@ -71,20 +71,47 @@ group.with {
     
     //implement the three operators and utility intermediate channels here
 
+    int c1 = 0
+    int c2 = 0
+    int c3 = 0
+    Integer h = 3
 
+    def chicagoEURPrices = new DataflowQueue()
+    def dummy = new DataflowQueue()
+    //Operator 1: Convert USD prices to EUR
+    operator(inputs: [chicagoUSDPrices, usd2eurRates], outputs: [chicagoEURPrices]) { usdPrice, rate ->
+        def res = usdPrice * rate
+        bindOutput res
+        // chicagoEURPrices << res
+        println "op1 " + c1++ + " " + res
+    }
 
+    //Operator 2: Calculate daily average price in EUR
+    operator(inputs: [parisEURPrices, viennaEURPrices, frankfurtEURPrices, chicagoEURPrices], outputs: [avgPrices], stateObject: [parisPrice: 0]) { paris, vienna, frankfurt, chicago ->
+        if (paris != 0) {
+            stateObject.parisPrice = paris
+        }
+        else {
+            paris = stateObject.parisPrice
+        }
+        def res = (int) ((paris + vienna + frankfurt + chicago) / 4)
+        // avgPrices << res
+        bindOutput res
+        println "opera2 " + ++c2 + " " + res
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    //Operator 3: Calculate a five-day moving average
+    operator(inputs: [avgPrices], outputs: [fiveDayAverages], stateObject: [history: []]) { avg ->
+        println "operator3rec " + avg
+        stateObject.history << avg
+        if (stateObject.history.size() > 5) {
+            stateObject.history.remove(0)
+        }
+        int res = (int) (stateObject.history.sum() / stateObject.history.size())
+        // fiveDayAverages << res
+        bindOutput res
+        println "operator3 " + ++c3 + " " + res + " " + stateObject.history
+    }
 
     //================================= do not modify beyond this point    
 
