@@ -11,6 +11,8 @@ package e01
 object HelloWorld:
 	def main(args: Array[String]): Unit =
 		println("Hello world")
+		printHelloAll()
+		printHelloUniverse()
 
 	// Alternative syntax for blocks (Scala version 2)
 	def printHelloAll(): Unit = {
