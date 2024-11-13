@@ -30,6 +30,12 @@ class Rational(n: Int, d: Int):
 	def / (that: Rational) = Rational(numer * that.denom, denom * that.numer)
 	def unary_- = Rational(-numer, denom)
 
+	// task 1
+	def <-^ (i: Int) = Rational(i, denom)
+
+	// task 2
+	def unary_! = Rational(denom, numer)
+
 	// In future versions of Scala, methods with non-symbolic names will only be allowed as
 	// operators if they are declared with the infix modifier.
 	infix def withDenom(i: Int) = Rational(numer, i)
@@ -37,6 +43,11 @@ class Rational(n: Int, d: Int):
 	override def toString = s"${numer}/${denom}"
 	private def gcd(a: Int, b: Int): Int = if b == 0 then a else gcd(b, a % b)
 
+	// task 3
+	// idk why this works
+	infix def ~ (i: Int) = Rational(i)
+
+var R = Rational(7, 9)
 
 object RationalTest:
 	def main(args: Array[String]): Unit =
@@ -54,22 +65,18 @@ object RationalTest:
 		/* ASSIGNMENT 1
 		 * Implement an operator that sets the numerator to a given value
 		 * such that the following statement prints out "11/35"
-		 *
-		 * println(c <-^ 11)
 		 */
+		println(c <-^ 11)
 
 		/* ASSIGNMENT 2
 		 * Implement a unary operator ! that inverts the rational
 		 * number such that the following statement prints out "35/9"
-		 *
-		 * println(!c)
 		 */
-
+		println(!c)
 
 		/* ASSIGNMENT 3
 		 * Make is possible to prefix an integer number with R ~ to
 		 * turn the number into a rational one. The following statement
 		 * should print out "5/3"
-		 *
-		 * println(R ~ 5/3)
 		 */
+		println(R ~ 5/3)

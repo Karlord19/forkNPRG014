@@ -19,8 +19,9 @@ object TypeInference:
 	/* ASSIGNMENT:
 	 * Change the getShape declaration so that the application 
 	 * prints out "Drawing general shape"
+	 * ... added : Shape, takže to bude vracet Shape jakoby
 	 */
-	def getShape(id: Int) =
+	def getShape(id: Int): Shape =
 		if id == 0 then
 			new Rectangle
 		else

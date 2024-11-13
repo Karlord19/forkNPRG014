@@ -34,7 +34,13 @@ object RationalOps:
 
 	extension (lhs: Int)
 		def ~ (dummy: R.type) = Rational(lhs)
+	
+	// task
+	extension (lhs: Rational)
+		def ~ (rhs: Int) = Rational(lhs.numer, rhs)
 
+// task second part
+implicit def intToRational(value: Int): Rational = Rational(value, 1)
 
 object RationalWithExtensionTest:
 	def main(args: Array[String]): Unit =
@@ -53,6 +59,5 @@ object RationalWithExtensionTest:
 		/* ASSIGNMENT
 		 * Introduce necessary definitions in order to make the statement
 		 * below possible. It should print out "1/2"
-		 *
-		 * println(1/2 ~ R)
 		 */
+		println(1/2 ~ R)
