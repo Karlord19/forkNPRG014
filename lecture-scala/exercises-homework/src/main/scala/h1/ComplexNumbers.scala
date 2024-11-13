@@ -4,14 +4,14 @@ import scala.language.implicitConversions
 // Add necessary class and object definitions in order to make the statements in the main work.
 
 class Complex(val r: Int, val i: Int):
-	def +(other: Complex): Complex = Complex(r + other.r, i + other.i)
-	def *(other: Complex): Complex = Complex(r*other.r - i*other.i, r*other.i + i*other.r)
-	def unary_- : Complex = Complex(-r, -i)
-	override def toString: String = s"$r" + { if i < 0 then "-" else "+" } + s"${Math.abs(i)}i"
-	def +(other: Int): Complex = Complex(r + other, i)
-	def *(other: Int): Complex = Complex(r*other, i*other)
 
-val I:Complex = Complex(0,1)
+	def +(other: Complex) = Complex(r + other.r, i + other.i)
+	def *(other: Complex) = Complex(r*other.r - i*other.i, r*other.i + i*other.r)
+	def unary_- = Complex(-r, -i)
+
+	override def toString = s"$r" + { if i < 0 then "-" else "+" } + s"${Math.abs(i)}i"
+
+val I = Complex(0,1)
 
 implicit def intToComplex(value: Int): Complex = Complex(value, 0)
 
