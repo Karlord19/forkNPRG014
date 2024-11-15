@@ -14,6 +14,18 @@ object Functions:
 					xs.filter(pivot.==),
 					sort(xs.filter(pivot.<))
 			)
+	
+	// task 1
+	def sort(xs: Array[Int], compare: (Int, Int) => Int): Array[Int] =
+		if xs.length <= 1 then
+			xs
+		else
+			val pivot = xs(xs.length / 2)
+			Array.concat(
+				sort(xs.filter(compare(_, pivot) < 0), compare),
+				xs.filter(compare(_, pivot) == 0),
+				sort(xs.filter(compare(_, pivot) > 0), compare)
+			)
 
 	def concatArray[T](items: Array[T], fcn: T => String) =
 		val bld = new StringBuilder
@@ -43,12 +55,11 @@ object Functions:
 
 		println(concatArray(otherNumbers, (_: Int) + " "))
 
-		/* ASSIGNMENT:
-		 * Write another sort function that will accept the comparison function, which takes two integers on input and returns one integer on output 
-		 * (with the same semantics as the function compare in class Relational). Your sort function should use this compare method for comparison.
-		 * It will be used in the following way:
-		 * 
-     * val yetOtherNumbers = sort(Array(1,4,2,9,-1), _ - _)
-		 * println(concatArray(yetOtherNumbers, conc))
-		 */
+        /* ASSIGNMENT:
+         * Write another sort function that will accept the comparison function, which takes two integers on input and returns one integer on output 
+         * (with the same semantics as the function compare in class Relational). Your sort function should use this compare method for comparison.
+         * It will be used in the following way:
+         */
 
+		val yetOtherNumbers = sort(Array(1,4,2,9,-1), _ - _)
+		println(concatArray(yetOtherNumbers, conc))

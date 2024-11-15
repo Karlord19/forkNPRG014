@@ -34,7 +34,7 @@ object JillsPrefs:
 object GreeterTest:
   def main(args: Array[String]): Unit =
     // Note that import JillsPrefs.* does not automatically import givens they have to be imported by one of these:
-    import JillsPrefs.given
+    // import JillsPrefs.given
     // import JillsPrefs.{prompt, drink}
     // import JillsPrefs.{given PreferredPrompt, given PreferredDrink}
 
@@ -46,6 +46,11 @@ object GreeterTest:
     *   But while you work, why not enjoy a cup of water?
     *   relax>
     */
+
+    // task 1
+    import JoesPrefs.prompt
+    val drink = PreferredDrink("water")
+    given PreferredDrink = drink
 
     Greeter.greet("Jill")
 

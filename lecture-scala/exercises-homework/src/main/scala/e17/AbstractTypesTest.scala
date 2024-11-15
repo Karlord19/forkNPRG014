@@ -18,6 +18,13 @@ abstract class Animal:
 
 	def amountOfFoodPerDay: Double
 
+	// task 1
+	// note that if the SuitableFood are not the same, the method will not compile
+	// does not work yet
+	def eatsMoreThan(animal: Animal): Boolean =
+		animal.SuitableFood =:= this.SuitableFood &&
+		animal.amountOfFoodPerDay < amountOfFoodPerDay
+
 
 class Shark(val amountOfFoodPerDay: Double) extends Animal :
 	type SuitableFood = Fish
@@ -56,10 +63,9 @@ object AbstractTypesTest:
 
 		/* ASSIGNMENT
 		Add a new method to class Animal such that the following statements work as described
-
-		println(bessy.eatsMoreThan(sissy))      -- prints "true"
-		// println(bessy.eatsMoreThan(shawn))   -- does not compile
 		*/
+		println(bessy.eatsMoreThan(sissy))      // prints "true"
+		// println(bessy.eatsMoreThan(shawn))   // does not compile
 
 
 		Pasture.animals = bessy :: Pasture.animals

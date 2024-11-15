@@ -16,8 +16,16 @@ trait Ordered[T]:
 	def <=(that: T) = (this compare that) <= 0
 	def >=(that: T) = (this compare that) >= 0
 
+// task 1
+trait VerboseComparable[T] extends Ordered[T]:
+	def compare(that: T): Int
 
-class Rational(n: Int, d: Int) extends Ordered[Rational]:
+	def #<(that: T) = if (this < that) s"$this is strictly less than $that" else s"$this isn't strictly less than $that"
+	def #<=(that: T) = if (this <= that) s"$this is less or equal to $that" else s"$this isn't less or equal to $that"
+	def #>(that: T) = if (this > that) s"$this is strictly greater than $that" else s"$this isn't strictly greater than $that"
+	def #>=(that: T) = if (this >= that) s"$this is greater or equal to $that" else s"$this isn't greater or equal to $that"
+
+class Rational(n: Int, d: Int) extends VerboseComparable[Rational]:
 	require(d != 0)
 
 	private val g = gcd(n.abs, d.abs)
@@ -63,7 +71,7 @@ object Traits:
 
 		/* ASSIGNMENT:
 		 * Introduce a new trait VerboseComparable that adds operations #<, #<=, #>, #>=, which return a string result as follows:
-		 * 
-		 * println(a #>= b) // 3/2 is more or equal to 73/56
-		 * println(a #< b)	// 3/2 isn't strictly less than 73/56	
 		 */
+		println(a #>= b) // 3/2 is more or equal to 73/56
+		println(a #< b)	// 3/2 isn't strictly less than 73/56	
+		
