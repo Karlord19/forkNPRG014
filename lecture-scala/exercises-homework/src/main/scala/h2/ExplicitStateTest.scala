@@ -10,48 +10,74 @@ Person Joe aged 24
 
 */
 
-/*
 package h2
 
 import scala.collection.mutable.ListBuffer
 
-
 trait WithExplicitState:
-  /* add necessary declarations here */
 
-  protected def state: /* add the correct type here */
-  protected def state_=(state: /* add the correct type here */): Unit
+  // State_type always knows the type of the state used inside this trait
+  protected type State_type <: Any
+
+  protected var m_state: State_type = _
+
+  protected def state: State_type = m_state
+  protected def state_=(m_state: State_type): Unit = this.m_state = m_state
 
 
 class PersonState(val name: String, val age: Int)
 
 class Person extends WithExplicitState:
-  /* Implement this class. It should have no knowledge of the trait History. It should use instances of PersonState as the state. */
+
+  type State_type = PersonState
+  
+  m_state = new State_type("", 0)
+
+  def setName(name: String): this.type =
+    m_state = new State_type(name, m_state.asInstanceOf[State_type].age)
+    this
+  
+  def setAge(age: Int): this.type =
+    m_state = new State_type(m_state.asInstanceOf[State_type].name, age)
+    this
+
+  override def toString: String =
+    s"Person ${m_state.asInstanceOf[State_type].name} aged ${m_state.asInstanceOf[State_type].age}"
 
 
 type RGBColor = (Int, Int, Int)
 class ThingState(val name: String, val color: RGBColor)
 
 class Thing extends WithExplicitState:
-  /* Implement this class. It should have no knowledge of the trait History. It should use instances of ThingState as the state. */
+
+  type State_type = ThingState
+  
+  m_state = new State_type("", (0, 0, 0))
+
+  def setName(name: String): this.type =
+    m_state = new State_type(name, m_state.asInstanceOf[State_type].color)
+    this
+  
+  def setColor(color: RGBColor): this.type =
+    m_state = new State_type(m_state.asInstanceOf[State_type].name, color)
+    this
+
+  override def toString: String =
+    s"Thing ${m_state.asInstanceOf[State_type].name} with color ${m_state.asInstanceOf[State_type].color}"
 
 
+trait History extends WithExplicitState:
 
-trait History:
-    /* Add necessary declarations here. This trait should have no knowledge of classes Person, Thing, PersonState, ThingState.
-       It should depend only on the trait WithExplicitState.
-    */
+    val hist = ListBuffer.empty[ State_type ]
 
-    val hist = ListBuffer.empty[/* add the correct type here */]
-
-    def checkpoint(): /* add the correct type here */ =
-      hist.append(state)
+    def checkpoint(): this.type =
+      hist.append(m_state)
       this
 
     def history = hist.toList
 
-    def restoreTo(s: /* add the correct type here */): /* add the correct type here */ =
-      state = s
+    def restoreTo(s: State_type): this.type =
+      m_state = s
       this
 
 
@@ -82,5 +108,3 @@ object ExplicitStateTest:
 
     // The line below must not compile. It should complain about an incompatible type.
     // box.restoreTo(johnsPrevState)
-
-*/

@@ -20,10 +20,10 @@ abstract class Animal:
 
 	// task 1
 	// note that if the SuitableFood are not the same, the method will not compile
-	// does not work yet
-	def eatsMoreThan(animal: Animal): Boolean =
-		animal.SuitableFood =:= this.SuitableFood &&
-		animal.amountOfFoodPerDay < amountOfFoodPerDay
+	def eatsMoreThan(animal: Animal { type SuitableFood = outer.SuitableFood}): Boolean =
+		// (typeOf[animal.SuitableFood] =:= typeOf[this.SuitableFood]) &&
+		// (animal.getClass == this.getClass) &&
+		(animal.amountOfFoodPerDay < amountOfFoodPerDay)
 
 
 class Shark(val amountOfFoodPerDay: Double) extends Animal :
