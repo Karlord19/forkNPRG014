@@ -26,9 +26,13 @@ object ControlTest:
 				}
 		}
 
+		// task 1
+		def ifThenElse(condition: Boolean)(trueBranch: => Any)(falseBranch: => Any): Any =
+			if condition then trueBranch else falseBranch
+
 		/* ASSIGNMENT:
 		 * Define a function ifThenElse which can be used as demonstrated below
- 
+		 */
 		ifThenElse(2 > 1) { // should print "True branch"
 			println("True branch")
 		} {
@@ -39,9 +43,3 @@ object ControlTest:
 		val y = 3
 		val result = ifThenElse(x > y) { x } { y }
 		println(result) // should print "3"
-
-		*/
-
-
-
-

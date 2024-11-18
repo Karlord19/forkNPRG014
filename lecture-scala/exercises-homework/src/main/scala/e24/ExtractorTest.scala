@@ -43,3 +43,7 @@ object ExtractorTest:
 
     val name @ DomainRev(dc1, dc2, _*) = "bures@d3s.mff.cuni.cz"
     println(s"$name @ ... . $dc2 . $dc1")
+    // $ does dereference the variable and use its value
+    // the values dc1 and dc2 are assigned by the extractor from the previous line
+    // the _* is a sequence wildcard, it matches any number of elements
+    // the extractor DomainRev is used to extract the domain in reverse order

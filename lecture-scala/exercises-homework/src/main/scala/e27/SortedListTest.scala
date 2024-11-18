@@ -24,7 +24,7 @@ class SortedList[T <: A] private (private val list: List[T]):
 	
 	def tail = new SortedList[T](list.tail)
 
-	def enlist[U >: T <: A](x: U): SortedList[U] =
+	def enlist[U >: T <: A](x: U): SortedList[U] = // here U is the parameter type, it says U >: T and U <: A
 		var result: List[U] = Nil
 		var remaining = list
 		var inserted = false

@@ -38,6 +38,8 @@ object Expressions:
 		 * E.g. it should reduce BinOp("*", Number(2), Number(3)) to Number(6).
 		 * After this enhancement, the statement below should produce BinOp("*", Var(x), Number(2))
 
+		 myslim že by se měl vytvořit accompany object a nadefinovat na něm apply
+
 		val expr2 = BinOp("*", Var("x"), BinOp("*", BinOp("+", Number(1), Number(1)), Number(1)))
 		println(expr2)
 		println(simplify(expr2))
