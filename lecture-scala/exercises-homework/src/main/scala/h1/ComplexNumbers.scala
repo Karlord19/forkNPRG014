@@ -5,15 +5,18 @@ import scala.language.implicitConversions
 
 class Complex(val r: Int, val i: Int):
 
-	def +(other: Complex) = Complex(r + other.r, i + other.i)
-	def *(other: Complex) = Complex(r*other.r - i*other.i, r*other.i + i*other.r)
-	def unary_- = Complex(-r, -i)
+	def this(r: Int) = this(r, 0)
 
-	override def toString = s"$r" + { if i < 0 then "-" else "+" } + s"${Math.abs(i)}i"
+	def +(that: Complex) = Complex(r + that.r, i + that.i)
+	def *(that: Complex) = Complex(r*that.r - i*that.i, r*that.i + i*that.r)
+	def unary_- = new Complex(-r, -i)
+
+	override def toString = s"$r${ if i < 0 then "-" else "+" }${Math.abs(i)}i"
+
+object Complex:
+	given Conversion[Int, Complex] = r => new Complex(r)
 
 val I = Complex(0,1)
-
-implicit def intToComplex(value: Int): Complex = Complex(value, 0)
 
 object ComplexNumbers:
 	def main(args: Array[String]): Unit =
