@@ -7,9 +7,12 @@ package e29
 object CovariantQueue:
 	def apply() = new CovariantQueue(Nil, Nil)
 
+// je to immutable zvenku, mutable zevnitr
+// bacha - private znamena ze to je viditelne ze vsech instanci stejne tridy
+// ale zachranil to tim ze to je private[this] - takze to je viditelne jen z te jedne instance
 class CovariantQueue[+T] private (
 		private[this] var leading: List[T],
-		private[this] var trailing: List[T]
+		private[this] var trailing: List[T] // je to reversed list jakoby logicky
 	):
 
 	private def mirror(): Unit =

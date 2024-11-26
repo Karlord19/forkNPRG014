@@ -30,6 +30,9 @@ abstract class Currency:
 
     def designation = currency.designation
 
+    // task 1
+    def to(other: Currency): other.CurrencyAmount =
+      other.make(math.round(amount.toDouble * Converter.exchangeRate(designation)(other.designation)))
 
   def make(amnt: Long) = new CurrencyAmount {
     val amount = amnt
@@ -74,7 +77,6 @@ object Currencies:
     // val x = USD.Dollar + EUR.Cent  -- Does not compile
 
     /* ASSIGNMENT
-    Add a new method to class Currency#CurrencyAmount to allow converting an amount to a particular currency
-
+     * Add a new method to class Currency#CurrencyAmount to allow converting an amount to a particular currency
+     */
     println(dollars to EUR)
-    */

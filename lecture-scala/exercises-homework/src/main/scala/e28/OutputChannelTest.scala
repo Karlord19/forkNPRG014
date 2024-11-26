@@ -3,7 +3,7 @@ package e28
 /* Features:
  * - contravariance
  */
-trait OutputChannel[-T]:
+trait OutputChannel[-T]: // -T means contravariant
 	def write(x: T): Unit
 
 
@@ -35,3 +35,5 @@ object OutputChannelTest:
 		out = AOutputChannel
 		
 		// out = ABOutputChannel  --  does not compile
+		// protoze to bylo AA tak uz nedokaze zvladnout AB
+		// ale bylo mozne tam priradit A, protoze A zvladne AA

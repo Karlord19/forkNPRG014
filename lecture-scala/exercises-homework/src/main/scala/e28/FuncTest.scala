@@ -1,6 +1,8 @@
 package e28
 
-trait Func2P[O, I1, I2]:
+// task 1
+// pridat + a - a - do template
+trait Func2P[+O, -I1, -I2]:
 	def execute(x1: I1, x2: I2): O
 
 
@@ -25,7 +27,6 @@ object FuncTest:
 
 		/* ASSIGNMENT:
 		 * Adjust the code above in such a way that the line below works.
-		 * 
-		 * execute(F)
 		 */
+		execute(F)
 	}

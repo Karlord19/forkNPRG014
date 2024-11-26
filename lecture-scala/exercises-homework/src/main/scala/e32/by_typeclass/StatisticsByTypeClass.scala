@@ -4,6 +4,10 @@ package e32.by_typeclass
  * - type classes
  * - context bounds
  */
+
+// Type class pattern is a way to add new functionality to existing classes without modifying them.
+// lepsi nez by_interface i by_overloading
+
 object StatisticsByTypeClass:
   trait NumberLike[T]:
     def plus(x: T, y: T): T
@@ -54,20 +58,27 @@ object Duration:
   def apply(totalSeconds: Double) = new Duration(totalSeconds)
   def apply(min: Int, sec: Double) = new Duration(min, sec)
 
-
-
+// task 1
+// does not work
+object StaticsByTypeClassDurationImplicits:
+  given StatisticsByTypeClass.NumberLike[Duration] with
+    def plus(x: Duration, y: Duration) = Duration(x.totalSeconds + y.totalSeconds)
+    def minus(x: Duration, y: Duration) = Duration(x.totalSeconds - y.totalSeconds)
+    def divideByInt(x: Duration, y: Int) = Duration(x.totalSeconds / y)
+  
+  def mean(xs: Vector[Duration])(using ev: NumberLike[Duration]): Duration =
+    xs.reduce(_ + _) / xs.size
+`
 
 object StatisticsByTypeClassTest:
 
   def main(args: Array[String]): Unit =
     import StatisticsByTypeClass.*
 
-    println(mean(Array(5, 10, 15)))
+    println(mean(Array(5, 10, 15))) // jako druhy parametr se automaticky predava NumberLike[Int]
 
     /* ASSIGNMENT
-       Add a new type class implementation for the Duration such that the code below executes as expected.
-
+     * Add a new type class implementation for the Duration such that the code below executes as expected.
+     */
     import StaticsByTypeClassDurationImplicits._
     println(mean(Vector(Duration(1, 0), Duration(1, 30), Duration(2,0))))
-     */
-
