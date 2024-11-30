@@ -8,9 +8,49 @@ class PhoneNo(val prefix: Int, val number: Int)
 class Person(val firstName: String, val lastName: String, val phone: PhoneNo)
 class Address(val person: Person, val street: String, val city: String)
 
-// ... add the necessary classes
+trait JsonSerializer[T]:
+  def serialize(obj: T): String
 
-/*
+  extension (x: T)
+    def toJson: String = serialize(x)
+
+object JsonSerializer:
+  given stringSerializer: JsonSerializer[String] with
+    def serialize(s: String) = s""""$s""""
+
+  given intSerializer: JsonSerializer[Int] with
+    def serialize(i: Int) = i.toString
+  
+  given listSerializer[T](using JsonSerializer[T]): JsonSerializer[List[T]] with
+    def serialize(lst: List[T]) =
+      val lines = for entry <- lst yield
+        summon[JsonSerializer[T]].toJson(entry)
+      s"[ ${lines.mkString(", ")} ]"
+        
+  given mapSerializer[T](using JsonSerializer[T]): JsonSerializer[Map[String, T]] with
+    def serialize(m: Map[String, T]) =
+      val lines = for (key, value) <- m yield
+        s""""$key": ${summon[JsonSerializer[T]].toJson(value)}"""
+      s"{ ${lines.mkString(", ")} }"
+
+object PhoneNo:
+  given JsonSerializer[PhoneNo] with
+    def serialize(p: PhoneNo) =
+      import JsonSerializer.given
+      s"""{ "prefix": ${p.prefix.toJson}, "number": ${p.number.toJson} }"""
+
+object Person:
+  given JsonSerializer[Person] with
+    def serialize(p: Person) =
+      import JsonSerializer.given
+      s"""{ "firstName": ${p.firstName.toJson}, "lastName": ${p.lastName.toJson}, "phone": ${p.phone.toJson} }"""
+
+object Address:
+  given JsonSerializer[Address] with
+    def serialize(a: Address) =
+      import JsonSerializer.given
+      s"""{ "person": ${a.person.toJson}, "street": ${a.street.toJson}, "city": ${a.city.toJson} }"""
+
 object JsonSerializerTest:
   def main(args: Array[String]): Unit =
     import JsonSerializer.given
@@ -39,5 +79,3 @@ object JsonSerializerTest:
 
     val f = List(e1, e2)
     println(f.toJson) // [ { "person": { "firstName": "John", "lastName": "Doe", "phone": { "prefix": 1, "number": 123456 } }, "street": "Bugmore Lane 3", "city": "Lerfourche" }, { "person": { "firstName": "Jane", "lastName": "X", "phone": { "prefix": 420, "number": 345678 } }, "street": "West End Woods 1", "city": "Holmefefer" } ]
-
-*/
